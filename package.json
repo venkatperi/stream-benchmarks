@@ -1,0 +1,36 @@
+{
+  "name": "stream-benchmarks",
+  "version": "0.1.0",
+  "preferGlobal": false,
+  "description": "NEEDS DESCRIPTION",
+  "dependencies": {
+    "beautify-benchmark": "^0.2.4",
+    "benchmark": "^2.1.4",
+    "measured": "^1.1.0"
+  },
+  "bundleDependencies": [],
+  "main": "dist/index",
+  "scripts": {
+    "prepublish": "grunt"
+  },
+  "devDependencies": {
+    "coffee-coverage": "^1.0.1",
+    "coffee-script": "^1.10.0",
+    "coffeescope2": "^0.3.0",
+    "grunt": "^0.4.5",
+    "grunt-coffeelint": "0.0.15",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^0.4.6",
+    "grunt-istanbul": "^0.7.0",
+    "json-stringify-safe": "^5.0.1",
+    "lodash": "^4.12.0",
+    "q": "^1.5.0",
+    "should": "^8.3.1"
+  },
+  "author": "Venkat Peri <venkatperi@gmail.com> (http://www.vperi.com/)",
+  "license": "MIT",
+  "keywords": []
+}
