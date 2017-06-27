@@ -1,8 +1,35 @@
 # benchmarking nodejs streams
 
+### Reproducing Tests
+To reproduce the tests:
+1. Clone this repository
+```bash
+$ git clone https://github.com/venkatperi/stream-benchmarks
+```
+
+2. Install `bench-runner`
+```bash
+$ npm install -g bench-runner
+```
+
+
 ### Memory Streaming Performance
 #### Test: Write 1GiB in varying chunk sizes to `null`
-![mem to null]()
+
+To reproduce this test, run:
+```bash
+$ bench-runner -g ".*(default|high|low).*false.*buffer"
+```
+
+We want to see the effect of chunk size on streams operating in regular (not `objectMode`) mode. A `memory reader` is configured to push chunks of 2KiB through 128KiB to a `null writer`. Chunks are encoded as `buffers` to avoid any conversion overhead.
+
+![mem to null](https://raw.githubusercontent.com/venkatperi/stream-benchmarks/master/img/mem-to-null.png)
+
+We also vary the `highWaterMark` to see it's effect on stream performance:
+* `default`: Use the default `highWaterMark` (16KiB)
+* `low`: Force the `highWaterMark` to be always lower than the chunk size
+* `high`: Force the `highWaterMark` to be always higher than the chunk size
+
 ![Image](https://plot.ly/~venkatperi/42.png?share_key=awtG8lMNLpAIYNFjVJtAvC")
 
 
