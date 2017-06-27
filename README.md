@@ -16,7 +16,7 @@ $ cd stream-benchmarks
 $ bench-runner <options>
 ```
 
-#### Bigger is Better with Chunk Size & `highWaterMark` is a Killjoy
+## Bigger is Better with Chunk Size & `highWaterMark` is a Killjoy
 
 To reproduce:
 ```bash
@@ -39,7 +39,7 @@ Here's what we can see in the above graph:
 * Likewise, chunk sizes larger than the `highWaterMark`  result in lower performance (`low`).
 * The `default` plot has an inflection point around the default `highWaterMark` of 16KiB.
 
-#### Thoughts
+### Thoughts
 It would seem that the hit in performance is a result of the `streams` API trying to play nice and providing downstream components with the number of bytes they requested. Looking under the hood, the following snippet from [\_stream_readable.js](https://github.com/nodejs/readable-stream/blob/master/lib/_stream_readable.js) is responsible the decision to provide a `slice` (fast, for when `highWaterMark` > chunk) or concatenate multiple buffers (slow, for when `highWaterMark` < chunk):
 ```javascript
 // Extracts only enough buffered data to satisfy the amount requested.
@@ -62,12 +62,12 @@ function fromListPartial(n, list, hasStrings) {
 }
 ```
 
-### About the Tests
-#### benchmark.js
+## About the Tests
+### benchmark.js
 We use [`benchmark.js`](http://www.benchmarkjs.com) with a mocha-like runner
 [`bench-runner`](https://www.npmjs.com/package/bench-runner).
 
-#### Null Writer
+### Null Writer
 The `null writer` is a `Writable` stream which accepts chunks and does nothing with them.
 ```javascript
 NullWriter.prototype._write = function ( chunk, enc, cb ) {
@@ -81,7 +81,7 @@ NullWriter.prototype._write = function ( chunk, enc, cb ) {
 };
 ```
 
-#### Memory Reader
+### Memory Reader
 The `memory reader` is a `Readable` stream which uses a generator/iterator to push chunks of memory resident data. The generators used here return the same memory chunk for every call to `next()` to avoid the overhead of allocating memory.
 
 ```javascript
