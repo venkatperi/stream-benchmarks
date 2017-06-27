@@ -7,7 +7,10 @@
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "debug": "^2.6.8",
-    "measured": "^1.1.0"
+    "file-compare": "0.0.2",
+    "measured": "^1.1.0",
+    "numeral": "^2.0.6",
+    "tmp": "0.0.31"
   },
   "bundleDependencies": [],
   "main": "dist/index",

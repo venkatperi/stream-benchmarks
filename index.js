@@ -5,8 +5,7 @@ const tests = [
   //{type: 'buffer', objectMode: true},
   //,{type: 'string', objectMode: false}
   //{type: 'buffer', objectMode: true, highWaterMark: 64}
-  {objectMode: true, size: 1024 * 1024, count: 3, initialSize: 1024, maxSize: 1024,
-    highWaterMark: 200}
+  {objectMode: true, initialSize: 1024, maxSize: 1024 }
   //,{type: 'string', objectMode: true}
 ];
 
