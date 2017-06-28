@@ -11,17 +11,22 @@ function bytes( x ) {
   return numeral( x ).format( '0ib' )
 }
 
+let testType = {
+  'test=fixed size' : ( x ) => totalSize / x,
+  'test=fixed iter' : () => options.iter,
+};
+
 let options = {
   initialSize : Math.pow( 2, 11 ),
-  maxSize : Math.pow( 2, 17 ),
+  maxSize : Math.pow( 2, 16 ),
   iter : 200,
 
 };
 
 const HWM = {
-  'default HWM' : () => undefined,
-  'low HWM' : ( x ) => x - 10,
-  'high HWM' : ( x ) => x + 10
+  'hwm=default' : () => undefined,
+  'hwm=low' : ( x, objMode ) => objMode ? 16 : x / 2,
+  'hwm=high' : ( x, objMode ) => objMode ? 16 : x * 2
 };
 
 const sourceType = ['string', 'buffer'];
@@ -29,36 +34,41 @@ const modeType = [false, true];
 
 const totalSize = Math.pow( 2, 30 );
 
-suite( `write ${bytes( totalSize )} from memory to null`, () => {
+_.forOwn( testType, ( test, testName ) =>
+  suite( testName, () => {
 
-  _.forOwn( HWM, ( hwm, hwmType ) => suite( hwmType, () =>
-    modeType.forEach( ( objMode ) => suite( `objectMode ${objMode}`, () =>
-      sourceType.forEach( ( type ) => suite( `${type} source`, () => {
+    modeType.forEach( ( objMode ) => suite( `objectMode=${objMode}`, () =>
+      _.forOwn( HWM, ( hwm, hwmType ) => suite( hwmType, () => {
+          if ( objMode && hwmType.indexOf( 'default' ) < 0 ) {
+            return;
+          }
+          sourceType.forEach( ( type ) => suite( `source=${type}`, () => {
 
-        for ( let len = options.initialSize; len <= options.maxSize; len *= 2 ) {
-          let data = null;
-          let iter = totalSize / len;
+            for ( let len = options.initialSize; len <= options.maxSize; len *= 2 ) {
+              let data = null;
+              let iter = test(len);
 
-          // Allocate the buffer outside the test function.
-          // For large buffer sizes, the time for memory allocation can skew test results
-          beforeEach( () => data = type === 'string'
-            ? _.padEnd( '', len ) : Buffer.allocUnsafe( len ) );
+              // Allocate the buffer outside the test function.
+              // For large buffer sizes, the time for memory allocation can skew test results
+              beforeEach( () => data = type === 'string'
+                ? _.padEnd( '', len ) : Buffer.allocUnsafe( len ) );
 
-          bench( `${bytes( len )} x ${iter}`, ( done ) => {
-            let opts = {
-              generator : Generator.itemByCountIterator( data, totalSize / len ),
-              highWaterMark : hwm( len ),
-              objectMode: objMode
-            };
-            let w = new GeneratorReader( opts )
-              .pipe( new NullWriter( opts ) )
-              .on( 'finish', () => {
-                assert.equal( w.count, totalSize );
-                done();
+              bench( `${bytes( len )} x ${iter}`, ( done ) => {
+                let opts = {
+                  generator : Generator.itemByCountIterator( data, iter ),
+                  highWaterMark : hwm( len, objMode ),
+                  objectMode : objMode
+                };
+                let w = new GeneratorReader( opts )
+                  .pipe( new NullWriter( opts ) )
+                  .on( 'finish', () => {
+                    assert.equal( w.count, iter * len );
+                    done();
+                  } );
               } );
-          } );
+            }
+          } ) )
         }
-      } ) )
-    ) ) ) );
-} );
+      ) ) ) );
+  } ) );
 
