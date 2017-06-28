@@ -1,35 +1,9 @@
+= benchmarking nodejs streams
 :toc:
 
-[[benchmarking-nodejs-streams]]
-benchmarking nodejs streams
----------------------------
+For reproducing the tests, see xref:reproducing[reproducing].
 
-
-[[reproducing-tests]]
-Reproducing Tests
-^^^^^^^^^^^^^^^^^
-
-To reproduce the tests:
-
-Install `bench-runner`
-
-[source,bash]
-----
-$ npm install -g bench-runner
-----
-
-Clone this repository
-
-[source,bash]
-----
-$ git clone https://github.com/venkatperi/stream-benchmarks
-$ cd stream-benchmarks
-$ bench-runner <options>
-----
-
-[[chunk-size-and-the-high-water-mark]]
-Chunk Size and the High Water Mark
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+== Chunk Size & the High Water Mark
 
 We want to see the effect of chunk size on streams operating in regular
 (not `objectMode`) mode. A `memory reader` is configured to push chunks
@@ -40,18 +14,18 @@ image:https://raw.githubusercontent.com/venkatperi/stream-benchmarks/master/img/
 to null]
 
 We vary the `highWaterMark` to see it's effect on stream performance
-(relevant when `objectMode` is false): * `default`: Use the default
-`highWaterMark` (16KiB) * `low`: Force the `highWaterMark` to be always
-lower than the chunk size * `high`: Force the `highWaterMark` to be
-always higher than the chunk size
+(relevant when `objectMode` is false):
 
-We run the tests in a couple of ways: * Fixed Iterations: The total data
-through the pipeline will vary. * Fixed Size: More iterations when for
-smaller chunk sizes.
+* `default`: Use the default `highWaterMark` (16KiB)
+* `low`: Force the `highWaterMark` to be always lower than the chunk size
+* `high`: Force the `highWaterMark` to be always higher than the chunk size
 
-[[fixed-number-of-iterations]]
-Fixed Number of Iterations
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+We run the tests in a couple of modes:
+
+* Fixed Iterations: The total data through the pipeline will vary.
+* Fixed Size: More iterations when for smaller chunk sizes.
+
+=== Fixed Number of Iterations
 
 Reproduce with:
 
@@ -65,9 +39,7 @@ fixed number of iterations (e.g. 200).
 
 image:https://plot.ly/~venkatperi/48.png?share_key=rAm4c6kFTpKAsLeNElJFYA[image]
 
-[[fixed-total-data-size]]
-Fixed Total Data Size
-^^^^^^^^^^^^^^^^^^^^^
+=== Fixed Total Data Size
 
 To reproduce:
 
@@ -119,21 +91,34 @@ function fromListPartial(n, list, hasStrings) {
 }
 ----
 
-[[about-the-tests]]
-About the Tests
-~~~~~~~~~~~~~~~
+== About the Tests
 
-[[benchmark.js]]
-benchmark.js
-^^^^^^^^^^^^
+[[reproducing]]
+=== Reproducing Tests
 
+To reproduce the tests:
+
+Install `bench-runner`
+
+[source,bash]
+----
+$ npm install -g bench-runner
+----
+
+Clone this repository
+
+[source,bash]
+----
+$ git clone https://github.com/venkatperi/stream-benchmarks
+$ cd stream-benchmarks
+$ bench-runner <options>
+----
+
+=== benchmark.js
 We use http://www.benchmarkjs.com[`benchmark.js`] with a mocha-like
 runner https://www.npmjs.com/package/bench-runner[`bench-runner`].
 
-[[null-writer]]
-Null Writer
-^^^^^^^^^^^
-
+=== Null Writer
 The `null writer` is a `Writable` stream which accepts chunks and does
 nothing with them.
 
@@ -150,10 +135,7 @@ NullWriter.prototype._write = function ( chunk, enc, cb ) {
 };
 ----
 
-[[memory-reader]]
-Memory Reader
-^^^^^^^^^^^^^
-
+=== Memory Reader
 The `memory reader` is a `Readable` stream which uses a
 generator/iterator to push chunks of memory resident data. The
 generators used here return the same memory chunk for every call to
