@@ -47,7 +47,8 @@ suite( `write ${bytes( totalSize )} from memory to null`, () => {
           bench( `${bytes( len )} x ${iter}`, ( done ) => {
             let opts = {
               generator : Generator.itemByCountIterator( data, totalSize / len ),
-              highWaterMark : hwm( len )
+              highWaterMark : hwm( len ),
+              objectMode: objMode
             };
             let w = new GeneratorReader( opts )
               .pipe( new NullWriter( opts ) )

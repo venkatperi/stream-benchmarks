@@ -10,7 +10,9 @@
     "file-compare": "0.0.2",
     "measured": "^1.1.0",
     "numeral": "^2.0.6",
-    "tmp": "0.0.31"
+    "plotly": "^1.0.6",
+    "tmp": "0.0.31",
+    "yargs": "^8.0.2"
   },
   "bundleDependencies": [],
   "main": "dist/index",
