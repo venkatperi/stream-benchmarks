@@ -1,3 +1,11 @@
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
+:rootdir: .
+:imagesdir: {rootdir}/images
+:toclevels: 2
+:toc:
+:numbered:
+endif::[]
+
 = Performance of Node.js Streams
 :toc:
 
