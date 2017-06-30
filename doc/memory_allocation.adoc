@@ -8,19 +8,29 @@ endif::[]
 
 == Buffer Allocation Performance
 
-[NOTE]
+[TIP]
 ====
-.Reproduce With
+._Reproduce Test_
 ```javascript
 $ bench-runner -g "buffer allocation"
 ```
 ====
 
-The graph below shows the performance of allocating `Buffer` objects in Node.js
-(higher is faster).
+In this test, we allocate Node.js `Buffer` objects of increasing sizes from 2KiB to 32MiB
+in steps of powers of 2. `Buffers` are allocated via `Buffer.allocUnsafe()`.
+
+The graph below shows the performance of allocation vs `Buffer` size (higher performance
+means faster allocation; both axes are `log10`):
 
 image:https://plot.ly/~venkatperi/60.png?share_key=Pg7U9JME60N4lhGo1WcWun[performance]
 
-* Size matters: Smaller buffers are allocated faster.
-* Buffers are allocated via `Buffer.allocUnsafe()`
-* Both axes are log base 10.
+[NOTE]
+====
+._Size Matters_
+Smaller buffers are allocated faster.
+====
+
+From the graph:
+
+* Smaller buffers are allocated faster.
+* Allocation performance appears to be inversely proportional to buffer size.
