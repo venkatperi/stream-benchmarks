@@ -1,29 +1,65 @@
-= benchmarking nodejs streams
+= Performance of Node.js Streams
 :toc:
 
-For reproducing the tests, see xref:reproducing[reproducing].
+Note: For reproducing the tests, see xref:reproducing[reproducing].
 
-== Chunk Size & the High Water Mark
+== About Node.js Streams
+Like unix pipes, Node streams are great for streaming chunks of data between
+readers and writers to create arbitrary data processing pipelines.
 
-We want to see the effect of chunk size on streams operating in regular
-(not `objectMode`) mode. A `memory reader` is configured to push chunks
-of data `null writer`. Chunks are encoded as `buffers` to avoid any
-conversion overhead. Chunk sizes start at 2KiB.
+Streams normally operate on strings and `Buffer` (or `Uint8Array`) objects.
+In `object mode`, streams can also operate on arbitrary javascript values.
+
+=== Buffering
+Streams buffer incoming/outgoing data depending on the `highWaterMark` option.
+For normal streams, the `highWaterMark` specifies a total number of bytes. For
+object mode streams, the `highWaterMark` species a total number of objects.
+
+When the size of the internal buffer reaches the `highWaterMark` threshold, the
+stream will temporarily pause reading/writing data until that data is consumed.
+
+A key goal of the stream API is to limit the buffering of data to acceptable
+levels such that sources and destinations of differing speeds will not overwhelm
+the available memory.
+
+=== Encoding
+Specifying an encoding causes the stream data to be returned as strings of the
+specified encoding rather than as `Buffer` objects. By default, encoding is unspecified.
+
+== Analyzing Stream Performance
+We're interested in the overhead that come with using streams and specifically
+the impact of chunk size, high water mark, encoding and object mode.
+
+Our base case is a trivially simple pipeline consisting of a reader that
+pushes the same chunk of memory (a memory reader) to a writer which simply discards
+them (a null writer). By reusing memory, the memory reader avoids any memory
+allocation overhead.
+
+In more advanced cases, we look at the impact of adding intermediate transform
+nodes. We also look at the performance of the Node.js file streaming reader and writer.
+
+== The Base Case: Memory Reader to Null Writer
+
+A `memory reader` is configured to iteratively push a chunk of data `null writer`.
 
 image:https://raw.githubusercontent.com/venkatperi/stream-benchmarks/master/img/mem-to-null.png[mem
 to null]
 
-We vary the `highWaterMark` to see it's effect on stream performance
-(relevant when `objectMode` is false):
+We use the following settings:
 
-* `default`: Use the default `highWaterMark` (16KiB)
-* `low`: Force the `highWaterMark` to be always lower than the chunk size
-* `high`: Force the `highWaterMark` to be always higher than the chunk size
+* `encoding`: Chunks are encoded as `buffers` to avoid conversion overhead.
+* `highWaterMark`:
+  ** `default`: Use the default `highWaterMark` (16KiB)
+  ** `low`: Force the `highWaterMark` to be always lower than the chunk size
+  ** `high`: Force the `highWaterMark` to be always higher than the chunk size
+* `chunk size`: Ranges from 2KiB to 512KiB in steps of powers of 2.
 
-We run the tests in a couple of modes:
+The test runs in two modes:
 
-* Fixed Iterations: The total data through the pipeline will vary.
-* Fixed Size: More iterations when for smaller chunk sizes.
+* Fixed iterations: The total data through the pipeline will vary.
+* Fixed size: More iterations when for smaller chunk sizes.
+
+We use `benchmark.js` to determine the time taken for each of the above settings.
 
 === Fixed Number of Iterations
 
@@ -38,6 +74,19 @@ In this test, we push chunks 2KiB and larger through the pipeline, for a
 fixed number of iterations (e.g. 200).
 
 image:https://plot.ly/~venkatperi/48.png?share_key=rAm4c6kFTpKAsLeNElJFYA[image]
+
+Here's what we can see from the graph (_higher is better_):
+
+* Since the pipeline isn't processing buffers, chunk size doesn't have
+an impact on performance.
+
+* Chunk Size vs `highWaterMark`
+ ** Performance is best when `chunk size < highWaterMark` (`high` plot).
+ ** Likewise, performance is always poor when `chunk size > highWaterMark` 
+ ** In the case of the default `highWaterMark`, note the drop in performance
+when chunk size rises above 16KiB.
+
+* Operating the stream in object mode boosts performance marginally.
 
 === Fixed Total Data Size
 
@@ -91,9 +140,10 @@ function fromListPartial(n, list, hasStrings) {
 }
 ----
 
+include::doc/memory_allocation.adoc[]
+
 == About the Tests
 
-[[reproducing]]
 === Reproducing Tests
 
 To reproduce the tests:
