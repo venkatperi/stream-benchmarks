@@ -148,7 +148,7 @@ function fromListPartial(n, list, hasStrings) {
 }
 ----
 
-include::doc/memory_allocation.adoc[]
+include::memory_allocation.adoc[]
 
 == About the Tests
 
