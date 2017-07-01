@@ -1,0 +1,24 @@
+
+== Reproducing the Tests
+
+To reproduce the tests:
+
+Install https://www.npmjs.com/package/bench-runner[bench-runner]:
+
+[source,bash]
+----
+$ npm install -g bench-runner
+----
+
+Clone this repository:
+
+[source,bash]
+----
+$ git clone https://github.com/venkatperi/stream-benchmarks
+$ cd stream-benchmarks
+----
+
+Run `bench-runner`:
+
+[source,bash]
+$ bench-runner <options>

@@ -1,0 +1,11 @@
+
+== Null Writer
+`NullWriter` is a `Writable` stream which accepts chunks and does
+nothing with them.
+
+[source,javascript]
+----
+NullWriter.prototype._write = function ( chunk, enc, cb ) {
+  cb();
+};
+----

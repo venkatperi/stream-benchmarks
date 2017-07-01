@@ -1,0 +1,16 @@
+== Memory Reader
+`MemoryReader` is a `Readable` stream which uses a
+generator/iterator to push chunks of memory resident data. The
+generators returns the same memory chunk for every call to
+`next()` to avoid the overhead of allocating memory.
+
+[source,javascript]
+----
+function next( stream ) {
+  var next = stream._generator.next();
+  return stream.push( next.done ? null : next.value );
+}
+
+GeneratorReader.prototype._read = function ( n ) {
+  while ( next( this ) ) {}
+};
