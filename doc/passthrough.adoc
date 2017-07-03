@@ -1,0 +1,41 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+== Impact of Transforms
+
+[TIP]
+====
+._Reproduce Test_
+```javascript
+$ bench-runner -g "passthrough.*false.*default.*buffer"
+```
+====
+
+Here we look at the impact of including multiple `PassThrough` streams in
+our memory to null pipeline.
+
+NOTE: A `PassThrough` stream is a trivial implementation of a
+`Transform` stream that simply passes the input bytes across to the output.
+
+
+==== Default High Water Mark
+
+image:https://plot.ly/~venkatperi/62.png?share_key=pr6tL3wEJKveziryXxZnvR[default]
+
+
+==== High Water Mark > Chunk Size
+
+image:https://plot.ly/~venkatperi/64.png?share_key=1TmHu5ocfDMU4za3hQZAN6[high hwm]
+
+==== High Water Mark < Chunk Size
+
+image:https://plot.ly/~venkatperi/66.png?share_key=jeZxyXeMGhxeRgqDWTTeqB[low hwm]
+
+==== In Object Mode
+
+image:https://plot.ly/~venkatperi/68.png?share_key=CBVDSeqFtilsk7lX5O2YJm[object mode]

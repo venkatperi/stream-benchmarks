@@ -1,13 +1,15 @@
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 :rootdir: .
 :imagesdir: {rootdir}/images
-:toclevels: 2
-:toc:
 :numbered:
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
 endif::[]
 
 = Performance of Node.js Streams
-:toc:
 
 NOTE: For reproducing the tests, see link:doc/reproducing.adoc[Reproducing the Tests].
 

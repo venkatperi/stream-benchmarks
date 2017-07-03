@@ -1,0 +1,77 @@
+{
+  "file -> file": {
+    "path": ":file -> file"
+  }
+}
+{
+  "file -> null": {
+    "write delay: 0ms": {
+      "path": ":file -> null:write delay: 0ms"
+    },
+    "write delay: 1ms": {
+      "path": ":file -> null:write delay: 1ms"
+    },
+    "write delay: 10ms": {
+      "path": ":file -> null:write delay: 10ms"
+    },
+    "path": ":file -> null"
+  }
+}
+{
+  "buffer allocation": {
+    "path": ":buffer allocation"
+  }
+}
+{
+  "test=fixed size": {
+    "objectMode=false": {
+      "hwm=default": {
+        "source=string": {
+          "path": ":test=fixed size:objectMode=false:hwm=default:source=string"
+        },
+        "source=buffer": {
+          "path": ":test=fixed size:objectMode=false:hwm=default:source=buffer"
+        },
+        "path": ":test=fixed size:objectMode=false:hwm=default"
+      },
+      "hwm=low": {
+        "source=string": {
+          "path": ":test=fixed size:objectMode=false:hwm=low:source=string"
+        },
+        "source=buffer": {
+          "path": ":test=fixed size:objectMode=false:hwm=low:source=buffer"
+        },
+        "path": ":test=fixed size:objectMode=false:hwm=low"
+      },
+      "hwm=high": {
+        "source=string": {
+          "path": ":test=fixed size:objectMode=false:hwm=high:source=string"
+        },
+        "source=buffer": {
+          "path": ":test=fixed size:objectMode=false:hwm=high:source=buffer"
+        },
+        "path": ":test=fixed size:objectMode=false:hwm=high"
+      },
+      "path": ":test=fixed size:objectMode=false"
+    },
+    "objectMode=true": {
+      "hwm=default": {
+        "source=string": {
+          "path": ":test=fixed size:objectMode=true:hwm=default:source=string"
+        },
+        "source=buffer": {
+          "path": ":test=fixed size:objectMode=true:hwm=default:source=buffer"
+        },
+        "path": ":test=fixed size:objectMode=true:hwm=default"
+      },
+      "hwm=low": {
+        "path": ":test=fixed size:objectMode=true:hwm=low"
+      },
+      "hwm=high": {
+        "path": ":test=fixed size:objectMode=true:hwm=high"
+      },
+      "path": ":test=fixed size:objectMode=true"
+    },
+    "path": ":test=fixed size"
+  }
+}

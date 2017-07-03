@@ -5,6 +5,7 @@ const _ = require( 'lodash' );
 const GeneratorReader = require( '../lib/stream/generator_reader' );
 const NullWriter = require( '../lib/stream/null_writer' );
 const Generator = require( '../lib/util/Generator' );
+const PassThrough = require( '../lib/stream/pass_through2');
 
 function bytes( x ) {
   return x;
@@ -25,8 +26,8 @@ let options = {
 
 const HWM = {
   'hwm=default' : () => undefined,
-  'hwm=low' : ( x, objMode ) => objMode ? 16 : x / 2,
-  'hwm=high' : ( x, objMode ) => objMode ? 16 : x * 2
+  'hwm=low' : ( x, objMode ) => objMode ? 2 : x / 2,
+  'hwm=high' : ( x, objMode ) => objMode ? 2 : x * 2
 };
 
 const sourceType = ['string', 'buffer'];
@@ -46,7 +47,7 @@ _.forOwn( testType, ( test, testName ) =>
 
             for ( let len = options.initialSize; len <= options.maxSize; len *= 2 ) {
               let data = null;
-              let iter = test(len);
+              let iter = test( len );
 
               // Allocate the buffer outside the test function.
               // For large buffer sizes, the time for memory allocation can skew test results
