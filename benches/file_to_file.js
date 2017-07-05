@@ -18,7 +18,7 @@ function comp( f1, f2, cb ) {
   } );
 }
 
-suite( 'file -> file', () => {
+suite( 'readFile', () => {
 
   let tempFile = null;
 
