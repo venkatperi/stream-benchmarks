@@ -1,4 +1,4 @@
-const ReadStream = require( '../lib/stream/ReadStream' );
+const ReadStream = require( '../lib/stream/ReadStream2' );
 const NullWriter = require( '../lib/stream/null_writer' );
 const fs = require( 'fs' );
 const tmp = require( 'tmp' );

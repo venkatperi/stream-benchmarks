@@ -1,0 +1,17 @@
+BM_malloc/1024             37 ns         37 ns   18743289   25.5954GB/s
+BM_malloc/2048             39 ns         38 ns   16703295   49.5571GB/s
+BM_malloc/4096             42 ns         42 ns   16481369    90.365GB/s
+BM_malloc/8192             50 ns         50 ns   13463610   152.032GB/s
+BM_malloc/16384            68 ns         68 ns   10662442   225.732GB/s
+BM_malloc/32768            90 ns         90 ns    7785910   340.759GB/s
+BM_malloc/65536           144 ns        144 ns    4766801   424.125GB/s
+BM_malloc/131072          981 ns        980 ns     772789   124.513GB/s
+BM_malloc/262144         1084 ns       1083 ns     818646   225.528GB/s
+BM_malloc/524288          880 ns        879 ns     793921    555.29GB/s
+BM_malloc/1048576         893 ns        892 ns     797017   1094.49GB/s
+BM_malloc/2097152         894 ns        894 ns     773455   2.13346TB/s
+BM_malloc/4194304        1679 ns       1678 ns     762843   2.27381TB/s
+BM_malloc/8388608         915 ns        913 ns     751710   8.35496TB/s
+BM_malloc/16777216        928 ns        928 ns     752737   16.4496TB/s
+BM_malloc/33554432       1037 ns       1036 ns     730361   29.4566TB/s
+BM_malloc/67108864       1092 ns       1091 ns     696850   55.9291TB/s

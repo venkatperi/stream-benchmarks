@@ -2,8 +2,6 @@ assert = require( 'assert' )
 BufferPool = require( '../lib/util/BufferPool' )
 
 size = 16 * 1024 * 1024
-count = 32
-
 pool = undefined
 
 maxItOut = ( cb ) ->

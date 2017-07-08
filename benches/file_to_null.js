@@ -1,20 +1,47 @@
 const ReadStream = require( '../lib/stream/ReadStream' );
 const NullWriter = require( '../lib/stream/null_writer' );
 const fs = require( 'fs' );
+const tmp = require( 'tmp' );
 
-const file = __dirname + '/../lib/data/lorem.txt';
+const minSize = 1024;
+const maxSize = 1024 * 1024 * 1024;
+let fileNames = {};
 
 suite( 'file -> null', () => {
 
-  bench( 'using Buffer pool', ( done ) => {
-    new ReadStream( file )
-      .pipe( new NullWriter(  ) )
-      .on( 'finish', done );
+  before( () => {
+    for ( let size = minSize; size <= maxSize; size *= 2 ) {
+      let name = fileNames[size] = tmp.tmpNameSync();
+      let buf = Buffer.allocUnsafe( size );
+      fs.writeFileSync( name, buf );
+      // console.log( `${size}: ${name}` );
+    }
   } );
 
-  bench( 'using default reader', ( done ) => {
-    fs.createReadStream( file )
-      .pipe( new NullWriter(  ) )
-      .on( 'finish', done );
+  after( () => {
+    for ( let size = minSize; size <= maxSize; size *= 2 ) {
+      fs.unlinkSync( fileNames[size] );
+    }
   } );
+
+  suite( 'simulated buffer pool', () => {
+    for ( let size = minSize; size <= maxSize; size *= 2 ) {
+      bench( size, {attr : {x : size}}, ( done ) => {
+        new ReadStream( fileNames[size] )
+          .pipe( new NullWriter() )
+          .on( 'finish', done );
+      } );
+    }
+  } );
+
+  suite( 'fs.createReadStream', () => {
+    for ( let size = minSize; size <= maxSize; size *= 2 ) {
+      bench( size, {attr : {x : size}}, ( done ) => {
+        fs.createReadStream( fileNames[size] )
+          .pipe( new NullWriter() )
+          .on( 'finish', done );
+      } );
+    }
+  } );
+
 } );
